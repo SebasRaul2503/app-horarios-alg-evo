@@ -1,0 +1,20 @@
+# Ignorar caches de Python
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/*.venv/
+**/venv/
+
+# Ignorar node_modules en cualquier lugar
+**/node_modules/
+
+# Ignorar carpetas de build (dist) comunes en Angular y NestJS
+**/dist/
+
+#Ignorar archivos de angular
+
+**/*.angular/
+
+# Opcional: ignorar archivos de log
+*.log

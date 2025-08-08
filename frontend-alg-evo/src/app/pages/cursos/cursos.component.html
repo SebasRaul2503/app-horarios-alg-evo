@@ -1,0 +1,349 @@
+<div class="cursos-container">
+  <div class="header-section">
+    <h1 class="page-title">
+      <mat-icon>school</mat-icon>
+      Gestión de Cursos
+    </h1>
+    <p class="page-subtitle">
+      Administre los cursos académicos, profesores y requisitos
+    </p>
+  </div>
+  <mat-card class="form-card" elevation="2">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>add_circle</mat-icon>
+        Agregar Nuevo Curso
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form
+        [formGroup]="cursoForm"
+        (ngSubmit)="agregarCurso()"
+        class="curso-form"
+      >
+        <div class="form-grid">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre del Curso</mat-label>
+            <input
+              matInput
+              formControlName="nombre"
+              placeholder="Ej: Programación Orientada a Objetos"
+              maxlength="100"
+            />
+            <mat-icon matSuffix>book</mat-icon>
+            <mat-hint>Mínimo 3 caracteres, máximo 100</mat-hint>
+            <mat-error
+              *ngIf="
+                cursoForm.get('nombre')?.invalid &&
+                cursoForm.get('nombre')?.touched
+              "
+            >
+              {{ getErrorMessage("nombre") }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Profesor Asignado</mat-label>
+            <mat-select
+              formControlName="profesor_id"
+              placeholder="Seleccione un profesor"
+            >
+              <mat-option *ngIf="isLoadingDocentes" disabled>
+                <mat-spinner diameter="20"></mat-spinner>
+                Cargando profesores...
+              </mat-option>
+              <mat-option *ngFor="let docente of docentes" [value]="docente.id">
+                <div class="profesor-option">
+                  <mat-icon>person</mat-icon>
+                  <span>{{ docente.nombre }}</span>
+                </div>
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error
+              *ngIf="
+                cursoForm.get('profesor_id')?.invalid &&
+                cursoForm.get('profesor_id')?.touched
+              "
+            >
+              {{ getErrorMessage("profesor_id") }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Software Requerido</mat-label>
+            <mat-select
+              formControlName="software_requerido"
+              placeholder="Seleccione el software principal"
+            >
+              <mat-option
+                *ngFor="let software of softwareDisponibles"
+                [value]="software.value"
+              >
+                <div class="software-option">
+                  <span>{{ software.value }}</span>
+                </div>
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>apps</mat-icon>
+            <mat-error
+              *ngIf="
+                cursoForm.get('software_requerido')?.invalid &&
+                cursoForm.get('software_requerido')?.touched
+              "
+            >
+              {{ getErrorMessage("software_requerido") }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Peso del Curso</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="peso"
+              placeholder="1-10"
+              min="1"
+              max="10"
+            />
+            <mat-icon matSuffix>fitness_center</mat-icon>
+            <mat-hint>Dificultad del curso (1-10)</mat-hint>
+            <mat-error
+              *ngIf="
+                cursoForm.get('peso')?.invalid && cursoForm.get('peso')?.touched
+              "
+            >
+              {{ getErrorMessage("peso") }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Total de Alumnos</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="total_alumnos"
+              placeholder="1-100"
+              min="1"
+              max="100"
+            />
+            <mat-icon matSuffix>groups</mat-icon>
+            <mat-hint>Número de estudiantes inscritos</mat-hint>
+            <mat-error
+              *ngIf="
+                cursoForm.get('total_alumnos')?.invalid &&
+                cursoForm.get('total_alumnos')?.touched
+              "
+            >
+              {{ getErrorMessage("total_alumnos") }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Prerequisito (Opcional)</mat-label>
+            <mat-select
+              formControlName="prerequisito_id"
+              placeholder="Seleccione un curso prerequisito"
+            >
+              <mat-option [value]="null">
+                <div class="prerequisito-option">
+                  <mat-icon>block</mat-icon>
+                  <span>Ninguno</span>
+                </div>
+              </mat-option>
+              <mat-option
+                *ngFor="let curso of getCursosDisponiblesParaPrerequisito()"
+                [value]="curso.id"
+              >
+                <div class="prerequisito-option">
+                  <mat-icon>school</mat-icon>
+                  <span>{{ curso.nombre }}</span>
+                </div>
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>link</mat-icon>
+            <mat-hint>Curso que debe completarse antes</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="cursoForm.invalid || isSubmitting"
+            class="submit-button"
+          >
+            <mat-icon *ngIf="!isSubmitting">add</mat-icon>
+            <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+            {{ isSubmitting ? "Agregando..." : "Agregar Curso" }}
+          </button>
+
+          <button
+            mat-button
+            type="button"
+            (click)="cursoForm.reset()"
+            [disabled]="isSubmitting"
+          >
+            <mat-icon>clear</mat-icon>
+            Limpiar
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-divider class="section-divider"></mat-divider>
+
+  <mat-card class="table-card" elevation="2">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>list</mat-icon>
+        Lista de Cursos
+      </mat-card-title>
+      <mat-card-subtitle>
+        Total: {{ dataSource.data.length }} curso(s) registrado(s)
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="table-container" *ngIf="!isLoading; else loadingTemplate">
+        <table mat-table [dataSource]="dataSource" matSort class="cursos-table">
+          Columna ID
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td mat-cell *matCellDef="let curso" class="id-cell">
+              <span class="id-badge">{{ curso.id }}</span>
+            </td>
+          </ng-container>
+
+          Columna Nombre
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+            <td mat-cell *matCellDef="let curso" class="nombre-cell">
+              <div class="nombre-container">
+                <mat-icon class="nombre-icon">book</mat-icon>
+                <span class="nombre-text">{{ curso.nombre }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          Columna Profesor
+          <ng-container matColumnDef="profesor">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Profesor</th>
+            <td mat-cell *matCellDef="let curso" class="profesor-cell">
+              <div class="profesor-container">
+                <mat-icon class="profesor-icon">person</mat-icon>
+                <span class="profesor-text">{{ curso.profesorNombre }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          Columna Software
+          <ng-container matColumnDef="software_requerido">
+            <th mat-header-cell *matHeaderCellDef>Software</th>
+            <td mat-cell *matCellDef="let curso" class="software-cell">
+              <mat-chip
+                class="software-chip"
+                [style.background-color]="
+                  getSoftwareInfo(curso.software_requerido).color + '20'
+                "
+                [style.color]="getSoftwareInfo(curso.software_requerido).color"
+              >
+                {{ curso.software_requerido }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          Columna Peso
+          <ng-container matColumnDef="peso">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Peso</th>
+            <td mat-cell *matCellDef="let curso" class="peso-cell">
+              <div class="peso-container">
+                <mat-icon
+                  [matBadge]="curso.peso"
+                  matBadgePosition="after"
+                  class="peso-icon"
+                >
+                  {{ getPesoIcon(curso.peso) }}
+                </mat-icon>
+                <span class="peso-text">Nivel {{ curso.peso }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          Columna Alumnos
+          <ng-container matColumnDef="total_alumnos">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Alumnos</th>
+            <td mat-cell *matCellDef="let curso" class="alumnos-cell">
+              <div class="alumnos-container">
+                <mat-icon
+                  [matBadge]="curso.total_alumnos"
+                  matBadgePosition="after"
+                  class="alumnos-icon"
+                >
+                  groups
+                </mat-icon>
+                <span class="alumnos-text"
+                  >{{ curso.total_alumnos }} estudiantes</span
+                >
+              </div>
+            </td>
+          </ng-container>
+
+          Columna Prerequisito
+          <ng-container matColumnDef="prerequisito">
+            <th mat-header-cell *matHeaderCellDef>Prerequisito</th>
+            <td mat-cell *matCellDef="let curso" class="prerequisito-cell">
+              <div
+                class="prerequisito-container"
+                *ngIf="curso.prerequisitoNombre; else noPrerequisito"
+              >
+                <mat-icon class="prerequisito-icon">link</mat-icon>
+                <span class="prerequisito-text">{{
+                  curso.prerequisitoNombre
+                }}</span>
+              </div>
+              <ng-template #noPrerequisito>
+                <div class="no-prerequisito">
+                  <mat-icon class="no-prerequisito-icon">block</mat-icon>
+                  <span class="no-prerequisito-text">Ninguno</span>
+                </div>
+              </ng-template>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            class="table-row"
+          ></tr>
+        </table>
+
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 20]"
+          showFirstLastButtons
+          class="table-paginator"
+        >
+        </mat-paginator>
+      </div>
+
+      <ng-template #loadingTemplate>
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p class="loading-text">Cargando cursos...</p>
+        </div>
+      </ng-template>
+
+      <div
+        *ngIf="!isLoading && dataSource.data.length === 0"
+        class="empty-state"
+      >
+        <mat-icon class="empty-icon">school</mat-icon>
+        <h3>No hay cursos registrados</h3>
+        <p>Agregue el primer curso usando el formulario superior</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

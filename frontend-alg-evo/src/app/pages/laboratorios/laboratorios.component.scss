@@ -1,0 +1,289 @@
+.laboratorios-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #fafafa;
+  min-height: 100vh;
+}
+
+.header-section {
+  margin-bottom: 32px;
+  text-align: center;
+
+  .page-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: #1976d2;
+    margin: 0 0 8px 0;
+
+    mat-icon {
+      font-size: 2.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
+
+  .page-subtitle {
+    color: #666;
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+.form-card, .table-card {
+  margin-bottom: 24px;
+  border-radius: 12px;
+  
+  mat-card-header {
+    padding-bottom: 16px;
+    
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.5rem;
+      color: #333;
+    }
+  }
+}
+
+.laboratorio-form {
+  .form-row {
+    margin-bottom: 16px;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .software-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    mat-icon {
+      font-size: 1.2rem;
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    justify-content: flex-end;
+
+    .submit-button {
+      min-width: 180px;
+      height: 44px;
+      font-weight: 500;
+      
+      mat-spinner {
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+.section-divider {
+  margin: 32px 0;
+}
+
+.table-container {
+  .laboratorios-table {
+    width: 100%;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+
+    .mat-mdc-header-cell {
+      background-color: #f5f5f5;
+      font-weight: 600;
+      color: #333;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    .table-row {
+      transition: background-color 0.2s ease;
+      
+      &:hover {
+        background-color: #f9f9f9;
+      }
+    }
+
+    .id-cell {
+      .id-badge {
+        background-color: #e3f2fd;
+        color: #1976d2;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    }
+
+    .nombre-cell {
+      .nombre-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .nombre-icon {
+          color: #666;
+          font-size: 1.2rem;
+        }
+
+        .nombre-text {
+          font-weight: 500;
+        }
+      }
+    }
+
+    .capacidad-cell {
+      .capacidad-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .capacidad-icon {
+          font-size: 1.5rem;
+          width: 1.5rem;
+          height: 1.5rem;
+        }
+
+        .capacidad-text {
+          font-size: 0.9rem;
+          color: #666;
+        }
+      }
+    }
+
+    .software-cell {
+      .chips-container {
+        mat-chip-set {
+          mat-chip {
+            &.software-chip {
+              font-size: 0.75rem;
+              border: 1px solid currentColor;
+              
+              mat-icon {
+                font-size: 1rem;
+                width: 1rem;
+                height: 1rem;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .acciones-cell {
+      .delete-button {
+        transition: all 0.2s ease;
+        
+        &:hover {
+          background-color: #ffebee;
+          transform: scale(1.1);
+        }
+      }
+    }
+  }
+
+  .table-paginator {
+    border-top: 1px solid #e0e0e0;
+    background-color: #fafafa;
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  
+  .loading-text {
+    margin-top: 16px;
+    color: #666;
+    font-size: 1rem;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px;
+  color: #666;
+
+  .empty-icon {
+    font-size: 4rem;
+    width: 4rem;
+    height: 4rem;
+    color: #ccc;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    margin: 16px 0 8px 0;
+    font-weight: 400;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .laboratorios-container {
+    padding: 16px;
+  }
+
+  .header-section .page-title {
+    font-size: 2rem;
+    
+    mat-icon {
+      font-size: 2rem;
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  .form-actions {
+    flex-direction: column;
+    
+    .submit-button {
+      width: 100%;
+    }
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .software-cell .chips-container {
+    mat-chip-set {
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+  }
+}
+
+// Snackbar Styles
+::ng-deep {
+  .success-snackbar {
+    background-color: #4caf50 !important;
+    color: white !important;
+  }
+
+  .error-snackbar {
+    background-color: #f44336 !important;
+    color: white !important;
+  }
+}

@@ -1,0 +1,54 @@
+<div class="sidebar-container">
+  <!-- Header -->
+  <div class="sidebar-header">
+    <div class="logo-container" *ngIf="!isCollapsed">
+      <mat-icon class="logo-icon">school</mat-icon>
+      <div class="logo-text">
+        <h2 class="app-title">EduScheduler</h2>
+        <p class="app-subtitle">Sistema Académico</p>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider class="header-divider"></mat-divider>
+
+  <!-- Navigation Menu -->
+  <nav class="sidebar-nav">
+    <mat-nav-list class="nav-list">
+      <a
+        mat-list-item
+        *ngFor="let item of menuItems"
+        [routerLink]="item.path"
+        routerLinkActive="active"
+        class="nav-item"
+        [class.active]="isActiveRoute(item.path)"
+        [matTooltip]="isCollapsed ? item.label : ''"
+        matTooltipPosition="right"
+      >
+        <div class="nav-item-content">
+          <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+
+          <div class="nav-text" *ngIf="!isCollapsed">
+            <span class="nav-label">{{ item.label }}</span>
+          </div>
+        </div>
+
+        <div class="nav-indicator" *ngIf="isActiveRoute(item.path)"></div>
+      </a>
+    </mat-nav-list>
+  </nav>
+
+  <!-- Footer -->
+  <div class="sidebar-footer">
+    <mat-divider class="footer-divider"></mat-divider>
+    <div class="footer-content">
+      <div class="version-info">
+        <mat-icon class="version-icon">info</mat-icon>
+        <div class="version-text">
+          <span class="version-label">Versión 1.0.0</span>
+          <span class="version-date">2024</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

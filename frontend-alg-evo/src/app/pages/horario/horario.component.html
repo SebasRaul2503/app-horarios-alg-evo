@@ -1,0 +1,273 @@
+<div class="horario-container">
+  Header
+  <div class="header-section">
+    <h1 class="page-title">
+      <mat-icon>schedule</mat-icon>
+      Generador de Horarios
+    </h1>
+    <p class="page-subtitle">
+      Sistema inteligente de asignación automática de horarios académicos
+    </p>
+  </div>
+  <mat-card class="generator-card" elevation="2" *ngIf="!hasHorario">
+    <mat-card-content>
+      <div class="generator-content" *ngIf="!isLoading">
+        <div class="ready-section">
+          <mat-icon class="ready-icon">check_circle</mat-icon>
+          <h2 class="ready-title">¿Todo listo?</h2>
+          <p class="ready-description">
+            El sistema utilizará algoritmos genéticos para generar el horario
+            óptimo considerando disponibilidad de profesores, laboratorios y
+            restricciones académicas.
+          </p>
+
+          <div class="features-list">
+            <div class="feature-item">
+              <mat-icon class="feature-icon">smart_toy</mat-icon>
+              <span>Algoritmo Genético Inteligente</span>
+            </div>
+            <div class="feature-item">
+              <mat-icon class="feature-icon">balance</mat-icon>
+              <span>Optimización de Recursos</span>
+            </div>
+            <div class="feature-item">
+              <mat-icon class="feature-icon">speed</mat-icon>
+              <span>Resolución de Conflictos</span>
+            </div>
+          </div>
+
+          <button
+            mat-raised-button
+            color="primary"
+            class="generate-button"
+            (click)="generarHorario()"
+          >
+            <mat-icon>auto_awesome</mat-icon>
+            Generar Horario
+          </button>
+        </div>
+      </div>
+      <div class="loading-content" *ngIf="isLoading">
+        <mat-spinner diameter="60" class="loading-spinner"></mat-spinner>
+        <h3 class="loading-title">Generando horario inteligente...</h3>
+        <p class="loading-description">
+          El algoritmo genético está procesando todas las combinaciones
+          posibles.
+          <br />Este proceso puede tomar unos momentos.
+        </p>
+        <div class="loading-steps">
+          <div class="step-item">
+            <mat-icon class="step-icon">psychology</mat-icon>
+            <span>Analizando restricciones</span>
+          </div>
+          <div class="step-item">
+            <mat-icon class="step-icon">calculate</mat-icon>
+            <span>Optimizando asignaciones</span>
+          </div>
+          <div class="step-item">
+            <mat-icon class="step-icon">done_all</mat-icon>
+            <span>Validando resultado</span>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="horario-result" *ngIf="hasHorario && !isLoading">
+    <mat-card class="stats-card" elevation="2">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>analytics</mat-icon>
+          Estadísticas del Horario
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <mat-icon class="stat-icon courses">book</mat-icon>
+            <div class="stat-content">
+              <span class="stat-number">{{ estadisticas.totalCursos }}</span>
+              <span class="stat-label">Cursos Programados</span>
+            </div>
+          </div>
+          <div class="stat-item">
+            <mat-icon class="stat-icon professors">person</mat-icon>
+            <div class="stat-content">
+              <span class="stat-number">{{
+                estadisticas.profesoresActivos
+              }}</span>
+              <span class="stat-label">Profesores Activos</span>
+            </div>
+          </div>
+          <div class="stat-item">
+            <mat-icon class="stat-icon labs">computer</mat-icon>
+            <div class="stat-content">
+              <span class="stat-number">{{
+                estadisticas.laboratoriosUsados
+              }}</span>
+              <span class="stat-label">Laboratorios Utilizados</span>
+            </div>
+          </div>
+          <div class="stat-item">
+            <mat-icon class="stat-icon hours">schedule</mat-icon>
+            <div class="stat-content">
+              <span class="stat-number">{{ estadisticas.horasOcupadas }}</span>
+              <span class="stat-label">Horas Ocupadas</span>
+            </div>
+          </div>
+          <div class="stat-item" *ngIf="estadisticas.conflictos > 0">
+            <mat-icon class="stat-icon conflicts">warning</mat-icon>
+            <div class="stat-content">
+              <span class="stat-number">{{ estadisticas.conflictos }}</span>
+              <span class="stat-label">Horarios Múltiples</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    Tabla de Horario
+    <mat-card class="schedule-card" elevation="2">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>calendar_view_week</mat-icon>
+          Horario Académico Generado
+        </mat-card-title>
+        <div class="card-actions">
+          <button
+            mat-button
+            color="accent"
+            (click)="reiniciarHorario()"
+            class="reset-button"
+          >
+            <mat-icon>refresh</mat-icon>
+            Generar Nuevo
+          </button>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="schedule-container">
+          <table class="schedule-table">
+            <thead>
+              <tr>
+                <th class="time-header">Hora</th>
+                <th *ngFor="let dia of dias" class="day-header">{{ dia }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let hora of horas" class="schedule-row">
+                <td class="time-cell">
+                  <div class="time-content">
+                    <mat-icon class="time-icon">access_time</mat-icon>
+                    <span class="time-text">{{ hora }}</span>
+                  </div>
+                </td>
+                <td *ngFor="let dia of dias" class="schedule-cell">
+                  <div
+                    class="cell-content"
+                    [class.occupied]="!getCellData(dia, hora).isEmpty"
+                    [class.empty]="getCellData(dia, hora).isEmpty"
+                    [class.multiple]="getCellData(dia, hora).hasMultiple"
+                    [style.background-color]="
+                      getCellData(dia, hora).hasMultiple
+                        ? getMultipleCursosColor()
+                        : !getCellData(dia, hora).isEmpty
+                        ? getLaboratorioColor(
+                            getCellData(dia, hora).cursos[0].laboratorio
+                          )
+                        : ''
+                    "
+                  >
+                    <div
+                      class="single-class-info"
+                      *ngIf="
+                        !getCellData(dia, hora).isEmpty &&
+                        !getCellData(dia, hora).hasMultiple
+                      "
+                    >
+                      <div class="course-name">
+                        <mat-icon class="course-icon">book</mat-icon>
+                        <span>{{
+                          getCellData(dia, hora).cursos[0].curso
+                        }}</span>
+                      </div>
+                      <div class="professor-name">
+                        <mat-icon class="professor-icon">person</mat-icon>
+                        <span>{{
+                          getCellData(dia, hora).cursos[0].profesor
+                        }}</span>
+                      </div>
+                      <mat-chip class="lab-chip">
+                        <mat-icon matChipAvatar>computer</mat-icon>
+                        {{ getCellData(dia, hora).cursos[0].laboratorio }}
+                      </mat-chip>
+                    </div>
+                    <div
+                      class="multiple-classes-info"
+                      *ngIf="getCellData(dia, hora).hasMultiple"
+                    >
+                      <div class="multiple-header">
+                        <mat-icon class="multiple-icon">layers</mat-icon>
+                        <span class="multiple-count"
+                          >{{
+                            getCellData(dia, hora).cursos.length
+                          }}
+                          cursos</span
+                        >
+                      </div>
+
+                      <button
+                        mat-button
+                        [matMenuTriggerFor]="cursosMenu"
+                        class="dropdown-button"
+                      >
+                        <mat-icon>expand_more</mat-icon>
+                        Ver cursos
+                      </button>
+
+                      <mat-menu #cursosMenu="matMenu" class="cursos-menu">
+                        <div
+                          *ngFor="let curso of getCellData(dia, hora).cursos"
+                          class="curso-menu-item"
+                          mat-menu-item
+                        >
+                          <div class="curso-info">
+                            <div class="curso-header">
+                              <mat-icon class="curso-icon">book</mat-icon>
+                              <span class="curso-name">{{ curso.curso }}</span>
+                            </div>
+                            <div class="curso-details">
+                              <div class="detail-item">
+                                <mat-icon class="detail-icon">person</mat-icon>
+                                <span>{{ curso.profesor }}</span>
+                              </div>
+                              <div class="detail-item">
+                                <mat-icon class="detail-icon"
+                                  >computer</mat-icon
+                                >
+                                <span>{{ curso.laboratorio }}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </mat-menu>
+                    </div>
+
+                    <div
+                      class="empty-slot"
+                      *ngIf="getCellData(dia, hora).isEmpty"
+                    >
+                      <mat-icon class="empty-icon">remove</mat-icon>
+                      <span class="empty-text">Libre</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

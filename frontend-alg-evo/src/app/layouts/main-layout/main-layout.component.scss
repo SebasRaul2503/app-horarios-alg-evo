@@ -1,0 +1,78 @@
+.layout-container {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidenav-container {
+  height: 100%;
+  background-color: #fafafa;
+}
+
+.mobile-toolbar {
+  background: linear-gradient(90deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  .menu-button {
+    margin-right: 16px;
+    color: white;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .mobile-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+}
+
+.sidenav {
+  width: 280px;
+  border: none;
+  box-shadow: none;
+
+  &.mat-drawer-over {
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.main-content {
+  background-color: #fafafa;
+  min-height: 100vh;
+  
+  .content-wrapper {
+    height: 100%;
+    overflow-y: auto;
+    padding-top: 0;
+
+    @media (max-width: 768px) {
+      padding-top: 64px; // Space for mobile toolbar
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .sidenav-container {
+    margin-top: 64px;
+    height: calc(100vh - 64px);
+  }
+}
+
+// Angular Material overrides
+::ng-deep {
+  .mat-drawer-backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  .mat-sidenav-container {
+    background-color: #fafafa;
+  }
+}

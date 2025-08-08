@@ -1,0 +1,455 @@
+.horario-container {
+  padding: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+  background-color: #fafafa;
+  min-height: 100vh;
+}
+
+.header-section {
+  margin-bottom: 32px;
+  text-align: center;
+
+  .page-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: #1976d2;
+    margin: 0 0 8px 0;
+
+    mat-icon {
+      font-size: 2.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
+
+  .page-subtitle {
+    color: #666;
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+.generator-card {
+  margin-bottom: 24px;
+  border-radius: 12px;
+  
+  .generator-content {
+    .ready-section {
+      text-align: center;
+      padding: 48px 24px;
+
+      .ready-icon {
+        font-size: 4rem;
+        width: 4rem;
+        height: 4rem;
+        color: #4caf50;
+        margin-bottom: 24px;
+      }
+
+      .ready-title {
+        font-size: 2rem;
+        font-weight: 400;
+        color: #333;
+        margin: 0 0 16px 0;
+      }
+
+      .ready-description {
+        font-size: 1.1rem;
+        color: #666;
+        margin: 0 0 32px 0;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+      }
+
+      .features-list {
+        display: flex;
+        justify-content: center;
+        gap: 32px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+
+        .feature-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #666;
+          font-size: 0.95rem;
+
+          .feature-icon {
+            color: #1976d2;
+            font-size: 1.2rem;
+          }
+        }
+      }
+
+      .generate-button {
+        font-size: 1.1rem;
+        padding: 12px 32px;
+        height: 48px;
+        border-radius: 24px;
+        font-weight: 500;
+
+        mat-icon {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+
+  .loading-content {
+    text-align: center;
+    padding: 48px 24px;
+
+    .loading-spinner {
+      margin-bottom: 24px;
+    }
+
+    .loading-title {
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: #333;
+      margin: 0 0 16px 0;
+    }
+
+    .loading-description {
+      font-size: 1rem;
+      color: #666;
+      margin: 0 0 32px 0;
+      line-height: 1.6;
+    }
+
+    .loading-steps {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+
+      .step-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #666;
+        font-size: 0.9rem;
+
+        .step-icon {
+          color: #1976d2;
+          font-size: 1.1rem;
+        }
+      }
+    }
+  }
+}
+
+.horario-result {
+  .stats-card {
+    margin-bottom: 24px;
+    border-radius: 12px;
+
+    mat-card-header {
+      mat-card-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #333;
+      }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-top: 16px;
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px;
+        background: #f8f9fa;
+        border-radius: 8px;
+
+        .stat-icon {
+          font-size: 2rem;
+          width: 2rem;
+          height: 2rem;
+
+          &.courses { color: #1976d2; }
+          &.professors { color: #388e3c; }
+          &.labs { color: #f57c00; }
+          &.hours { color: #7b1fa2; }
+        }
+
+        .stat-content {
+          display: flex;
+          flex-direction: column;
+
+          .stat-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+          }
+
+          .stat-label {
+            font-size: 0.875rem;
+            color: #666;
+          }
+        }
+      }
+    }
+  }
+
+  .schedule-card {
+    border-radius: 12px;
+
+    mat-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      mat-card-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #333;
+      }
+
+      .card-actions {
+        .reset-button {
+          mat-icon {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+
+    .schedule-container {
+      overflow-x: auto;
+      margin-top: 16px;
+
+      .schedule-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 2px;
+        background: #f5f5f5;
+        border-radius: 8px;
+
+        thead {
+          .time-header,
+          .day-header {
+            background: #1976d2;
+            color: white;
+            padding: 16px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+
+            &:first-child {
+              border-radius: 8px 0 0 0;
+            }
+
+            &:last-child {
+              border-radius: 0 8px 0 0;
+            }
+          }
+
+          .time-header {
+            width: 100px;
+            min-width: 100px;
+          }
+        }
+
+        tbody {
+          .schedule-row {
+            .time-cell {
+              background: #e3f2fd;
+              padding: 8px;
+              text-align: center;
+              vertical-align: middle;
+              border-radius: 4px;
+
+              .time-content {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+
+                .time-icon {
+                  font-size: 1rem;
+                  color: #1976d2;
+                }
+
+                .time-text {
+                  font-weight: 500;
+                  color: #1976d2;
+                  font-size: 0.875rem;
+                }
+              }
+            }
+
+            .schedule-cell {
+              width: 200px;
+              min-width: 200px;
+              height: 80px;
+              padding: 4px;
+              vertical-align: top;
+
+              .cell-content {
+                height: 100%;
+                border-radius: 6px;
+                padding: 8px;
+                transition: all 0.2s ease;
+
+                &.occupied {
+                  border: 1px solid rgba(0, 0, 0, 0.1);
+                  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+                  &:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+                  }
+                }
+
+                &.empty {
+                  background: #fafafa;
+                  border: 1px dashed #ddd;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                }
+
+                .class-info {
+                  height: 100%;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 4px;
+
+                  .course-name,
+                  .professor-name {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    font-size: 0.75rem;
+
+                    mat-icon {
+                      font-size: 0.875rem;
+                      width: 0.875rem;
+                      height: 0.875rem;
+                    }
+                  }
+
+                  .course-name {
+                    font-weight: 600;
+                    color: #333;
+
+                    .course-icon {
+                      color: #1976d2;
+                    }
+                  }
+
+                  .professor-name {
+                    color: #666;
+
+                    .professor-icon {
+                      color: #388e3c;
+                    }
+                  }
+
+                  .lab-chip {
+                    font-size: 0.7rem;
+                    height: 20px;
+                    margin-top: auto;
+
+                    mat-icon {
+                      font-size: 0.8rem;
+                      width: 0.8rem;
+                      height: 0.8rem;
+                    }
+                  }
+                }
+
+                .empty-slot {
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 4px;
+                  color: #999;
+
+                  .empty-icon {
+                    font-size: 1.2rem;
+                  }
+
+                  .empty-text {
+                    font-size: 0.75rem;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .horario-container {
+    padding: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+  }
+
+  .features-list {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-section .page-title {
+    font-size: 2rem;
+    
+    mat-icon {
+      font-size: 2rem;
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  .schedule-container {
+    .schedule-table {
+      .schedule-cell {
+        width: 150px;
+        min-width: 150px;
+      }
+    }
+  }
+
+  .loading-steps {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+}
+
+// Snackbar Styles
+::ng-deep {
+  .success-snackbar {
+    background-color: #4caf50 !important;
+    color: white !important;
+  }
+
+  .error-snackbar {
+    background-color: #f44336 !important;
+    color: white !important;
+  }
+}

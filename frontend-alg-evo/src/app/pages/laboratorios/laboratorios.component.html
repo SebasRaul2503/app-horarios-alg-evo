@@ -1,0 +1,240 @@
+<div class="laboratorios-container">
+  <div class="header-section">
+    <h1 class="page-title">
+      <mat-icon>computer</mat-icon>
+      Gestión de Laboratorios
+    </h1>
+    <p class="page-subtitle">
+      Administre la información y recursos de los laboratorios de cómputo
+    </p>
+  </div>
+
+  <mat-card class="form-card" elevation="2">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>add_business</mat-icon>
+        Agregar Nuevo Laboratorio
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form
+        [formGroup]="laboratorioForm"
+        (ngSubmit)="agregarLaboratorio()"
+        class="laboratorio-form"
+      >
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre del Laboratorio</mat-label>
+            <input
+              matInput
+              formControlName="nombre"
+              placeholder="Ej: Laboratorio de Programación A"
+              maxlength="50"
+            />
+            <mat-icon matSuffix>business</mat-icon>
+            <mat-hint>Mínimo 2 caracteres, máximo 50</mat-hint>
+            <mat-error
+              *ngIf="
+                laboratorioForm.get('nombre')?.invalid &&
+                laboratorioForm.get('nombre')?.touched
+              "
+            >
+              {{ getErrorMessage("nombre") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Capacidad de Estudiantes</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="capacidad"
+              placeholder="Número de estudiantes"
+              min="1"
+              max="100"
+            />
+            <mat-icon matSuffix>people</mat-icon>
+            <mat-hint>Entre 1 y 100 estudiantes</mat-hint>
+            <mat-error
+              *ngIf="
+                laboratorioForm.get('capacidad')?.invalid &&
+                laboratorioForm.get('capacidad')?.touched
+              "
+            >
+              {{ getErrorMessage("capacidad") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Software Disponible</mat-label>
+            <mat-select
+              formControlName="software"
+              multiple
+              placeholder="Seleccione el software instalado"
+            >
+              <mat-option
+                *ngFor="let software of softwareDisponibles"
+                [value]="software.value"
+              >
+                <div class="software-option">
+                  <span>{{ software.value }}</span>
+                </div>
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>apps</mat-icon>
+            <mat-hint>Seleccione todo el software instalado</mat-hint>
+            <mat-error
+              *ngIf="
+                laboratorioForm.get('software')?.invalid &&
+                laboratorioForm.get('software')?.touched
+              "
+            >
+              {{ getErrorMessage("software") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="laboratorioForm.invalid || isSubmitting"
+            class="submit-button"
+          >
+            <mat-icon *ngIf="!isSubmitting">add</mat-icon>
+            <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+            {{ isSubmitting ? "Agregando..." : "Agregar Laboratorio" }}
+          </button>
+
+          <button
+            mat-button
+            type="button"
+            (click)="laboratorioForm.reset()"
+            [disabled]="isSubmitting"
+          >
+            <mat-icon>clear</mat-icon>
+            Limpiar
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-divider class="section-divider"></mat-divider>
+
+  <mat-card class="table-card" elevation="2">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>list</mat-icon>
+        Lista de Laboratorios
+      </mat-card-title>
+      <mat-card-subtitle>
+        Total: {{ dataSource.data.length }} laboratorio(s) registrado(s)
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="table-container" *ngIf="!isLoading; else loadingTemplate">
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          matSort
+          class="laboratorios-table"
+        >
+          Columna ID
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td mat-cell *matCellDef="let lab" class="id-cell">
+              <span class="id-badge">{{ lab.id }}</span>
+            </td>
+          </ng-container>
+
+          Columna Nombre
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+            <td mat-cell *matCellDef="let lab" class="nombre-cell">
+              <div class="nombre-container">
+                <mat-icon class="nombre-icon">computer</mat-icon>
+                <span class="nombre-text">{{ lab.nombre }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          Columna Capacidad
+          <ng-container matColumnDef="capacidad">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Capacidad</th>
+            <td mat-cell *matCellDef="let lab" class="capacidad-cell">
+              <div class="capacidad-container">
+                <mat-icon
+                  [matBadge]="lab.capacidad"
+                  matBadgePosition="after"
+                  class="capacidad-icon"
+                >
+                  {{ getCapacidadIcon(lab.capacidad) }}
+                </mat-icon>
+                <span class="capacidad-text"
+                  >{{ lab.capacidad }} estudiantes</span
+                >
+              </div>
+            </td>
+          </ng-container>
+
+          Columna Software
+          <ng-container matColumnDef="software">
+            <th mat-header-cell *matHeaderCellDef>Software</th>
+            <td mat-cell *matCellDef="let lab" class="software-cell">
+              <div class="chips-container">
+                <mat-chip-set>
+                  <mat-chip
+                    *ngFor="let software of lab.softwareArray"
+                    class="software-chip"
+                    [style.background-color]="getSoftwareColor(software) + '20'"
+                    [style.color]="getSoftwareColor(software)"
+                  >
+                    {{ software }}
+                  </mat-chip>
+                </mat-chip-set>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            class="table-row"
+          ></tr>
+        </table>
+
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 20]"
+          showFirstLastButtons
+          class="table-paginator"
+        >
+        </mat-paginator>
+      </div>
+
+      <ng-template #loadingTemplate>
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p class="loading-text">Cargando laboratorios...</p>
+        </div>
+      </ng-template>
+
+      <div
+        *ngIf="!isLoading && dataSource.data.length === 0"
+        class="empty-state"
+      >
+        <mat-icon class="empty-icon">computer</mat-icon>
+        <h3>No hay laboratorios registrados</h3>
+        <p>Agregue el primer laboratorio usando el formulario superior</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,30 @@
+<div class="layout-container">
+  <mat-sidenav-container class="sidenav-container">
+    <!-- Mobile Toolbar -->
+    <mat-toolbar class="mobile-toolbar" *ngIf="isMobile">
+      <button mat-icon-button (click)="toggleDrawer()" class="menu-button">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="mobile-title">EduScheduler</span>
+    </mat-toolbar>
+
+    <!-- Sidebar -->
+    <mat-sidenav
+      #drawer
+      class="sidenav"
+      [mode]="isMobile ? 'over' : 'side'"
+      [opened]="!isMobile && isDrawerOpen"
+      [fixedInViewport]="isMobile"
+      [fixedTopGap]="isMobile ? 64 : 0"
+    >
+      <app-sidebar></app-sidebar>
+    </mat-sidenav>
+
+    <!-- Main Content -->
+    <mat-sidenav-content class="main-content">
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
