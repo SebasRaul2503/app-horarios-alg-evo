@@ -3,7 +3,7 @@
 ## Integrantes
 | Código de estudiante | Apellidos y Nombres                |
 |----------------------|----------------------------------|
-| 0202314008           | Boyer Espinola Boyer             |
+| 0202314008           | Boyer Espinola Antony Gabriel    |
 | 0202214006           | Corales Samame Santos Dilver     |
 | 0201914060           | Angeles Osorio Denilson Fabrisio |
 | 0202014031           | Castillo Vasquez Sebastian Raul  |
