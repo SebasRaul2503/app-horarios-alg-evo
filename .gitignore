@@ -4,6 +4,7 @@
 **/*.pyo
 **/*.pyd
 **/*.venv/
+**/.env
 **/venv/
 
 # Ignorar node_modules en cualquier lugar

@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model cursos {
+  id                 Int         @id @default(autoincrement())
+  nombre             String?     @db.VarChar(100)
+  profesor_id        Int?
+  software_requerido String?     @db.VarChar(100)
+  peso               Int?
+  total_alumnos      Int?
+  prerequisito_id    Int?
+  profesores         profesores? @relation(fields: [profesor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cursos_ibfk_1")
+  cursos             cursos?     @relation("cursosTocursos", fields: [prerequisito_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cursos_ibfk_2")
+  other_cursos       cursos[]    @relation("cursosTocursos")
+  horarios           horarios[]
+
+  @@index([prerequisito_id], map: "prerequisito_id")
+  @@index([profesor_id], map: "profesor_id")
+}
+
+model horarios {
+  id             Int           @id @default(autoincrement())
+  curso_id       Int?
+  laboratorio_id Int?
+  dia            String?       @db.VarChar(20)
+  hora_inicio    DateTime?     @db.Time(0)
+  cursos         cursos?       @relation(fields: [curso_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "horarios_ibfk_1")
+  laboratorios   laboratorios? @relation(fields: [laboratorio_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "horarios_ibfk_2")
+
+  @@index([curso_id], map: "curso_id")
+  @@index([laboratorio_id], map: "laboratorio_id")
+}
+
+model laboratorios {
+  id        Int        @id @default(autoincrement())
+  nombre    String?    @db.VarChar(100)
+  capacidad Int?
+  software  String?    @db.Text
+  horarios  horarios[]
+}
+
+model profesores {
+  id             Int      @id @default(autoincrement())
+  nombre         String?  @db.VarChar(100)
+  disponibilidad String?  @db.Text
+  cursos         cursos[]
+}
